@@ -12,29 +12,21 @@ X = iris.data
 y = iris.target
 
 # Perform PCA to reduce the dimensions to 2
-# PCA is a dimensionality reduction technique that projects the data onto the first
-# two principal components, which capture the most variance in the data.
 pca = PCA(n_components=2)
 
 # Standardize the data
-# StandardScaler scales the features to have zero mean and unit variance,
-# which helps improve the performance of the logistic regression model.
 scaler = StandardScaler()
 
 # Train a logistic regression model
-# Logistic regression is a linear model for classification.
 logreg = LogisticRegression()
 
 # Combine PCA, scaling, and logistic regression in a pipeline
-# A pipeline is a sequence of data processing steps that are applied to the input data.
 pipeline = make_pipeline(scaler, pca, logreg)
 pipeline.fit(X, y)
 
 # Plot the decision boundaries
-# First, transform the input data using PCA and scaling.
-X_pca = pca.transform(scaler.transform(X))
-
 # Determine the range of the first and second principal components
+X_pca = pipeline.named_steps['pca'].transform(pipeline.named_steps['standardscaler'].transform(X))
 x_min, x_max = X_pca[:, 0].min() - 1, X_pca[:, 0].max() + 1
 y_min, y_max = X_pca[:, 1].min() - 1, X_pca[:, 1].max() + 1
 
